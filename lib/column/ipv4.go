@@ -1,9 +1,8 @@
 package column
 
 import (
-	"net"
-
 	"github.com/ClickHouse/clickhouse-go/lib/binary"
+	"net"
 )
 
 type IPv4 struct {
@@ -20,13 +19,6 @@ func (*IPv4) Read(decoder *binary.Decoder, isNull bool) (interface{}, error) {
 
 func (ip *IPv4) Write(encoder *binary.Encoder, v interface{}) error {
 	var netIP net.IP
-
-	if v == nil {
-		if err := encoder.UInt32(0); err != nil {
-			return err
-		}
-		return nil
-	}
 
 	switch v.(type) {
 	case string:
@@ -48,13 +40,15 @@ func (ip *IPv4) Write(encoder *binary.Encoder, v interface{}) error {
 			Column: ip,
 		}
 	}
+
 	ip4 := netIP.To4()
 	if ip4 == nil {
-		return &ErrUnexpectedType{
-			T:      v,
-			Column: ip,
+		if err := encoder.UInt32(0); err != nil {
+			return err
 		}
+		return nil
 	}
+
 	if _, err := encoder.Write([]byte{ip4[3], ip4[2], ip4[1], ip4[0]}); err != nil {
 		return err
 	}
