@@ -60,7 +60,7 @@ func TestIPv4_Write(t *testing.T) {
 		Error interface{}
 	}{
 		{
-			nil,
+			net.IP{},
 			nil,
 		},
 		{
@@ -84,10 +84,7 @@ func TestIPv4_Write(t *testing.T) {
 		},
 		{
 			"2001:0db8::0001",
-			&ErrUnexpectedType{
-				&ipv4,
-				"2001:0db8::0001",
-			},
+			nil,
 		},
 	}
 	for _, Case := range cases {
