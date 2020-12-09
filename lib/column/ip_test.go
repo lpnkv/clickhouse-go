@@ -77,10 +77,7 @@ func TestIPv4_Write(t *testing.T) {
 		},
 		{
 			"",
-			&ErrUnexpectedType{
-				&ipv4,
-				"",
-			},
+			nil,
 		},
 		{
 			"2001:0db8::0001",
